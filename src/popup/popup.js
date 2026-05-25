@@ -40,22 +40,53 @@
     item.className = "alert-card";
     item.dataset.severity = record.highestSeverity || "LOW";
     
-    item.innerHTML = [
-      "<div class=\"alert-card-header\">",
-      `  <span class="alert-badge" data-severity="${record.highestSeverity || "LOW"}">${record.highestSeverity || "LOW"}</span>`,
-      `  <span class="alert-count">${record.matchCount} match${record.matchCount === 1 ? "" : "es"}</span>`,
-      "</div>",
-      `<h3 class="alert-domain">${record.domain}</h3>`,
-      `<div class="alert-meta-time">${formatTime(record.timestamp)}</div>`,
-      `<div class="alert-details-row">`,
-      `  <span class="details-label">Fields:</span>`,
-      `  <span class="details-value">${record.fields.join(", ")}</span>`,
-      `</div>`,
-      `<div class="alert-details-row">`,
-      `  <span class="details-label">Detected:</span>`,
-      `  <span class="details-value snippet-value">${record.maskedSnippets.length ? record.maskedSnippets.join(", ") : "Snippet masking is disabled for the matched field."}</span>`,
-      `</div>`
-    ].join("");
+    const header = document.createElement("div");
+    header.className = "alert-card-header";
+    const badge = document.createElement("span");
+    badge.className = "alert-badge";
+    badge.dataset.severity = record.highestSeverity || "LOW";
+    badge.textContent = record.highestSeverity || "LOW";
+    const count = document.createElement("span");
+    count.className = "alert-count";
+    count.textContent = `${record.matchCount} match${record.matchCount === 1 ? "" : "es"}`;
+    header.appendChild(badge);
+    header.appendChild(count);
+    
+    const domain = document.createElement("h3");
+    domain.className = "alert-domain";
+    domain.textContent = record.domain;
+    
+    const time = document.createElement("div");
+    time.className = "alert-meta-time";
+    time.textContent = formatTime(record.timestamp);
+    
+    const row1 = document.createElement("div");
+    row1.className = "alert-details-row";
+    const label1 = document.createElement("span");
+    label1.className = "details-label";
+    label1.textContent = "Fields:";
+    const val1 = document.createElement("span");
+    val1.className = "details-value";
+    val1.textContent = record.fields.join(", ");
+    row1.appendChild(label1);
+    row1.appendChild(val1);
+    
+    const row2 = document.createElement("div");
+    row2.className = "alert-details-row";
+    const label2 = document.createElement("span");
+    label2.className = "details-label";
+    label2.textContent = "Detected:";
+    const val2 = document.createElement("span");
+    val2.className = "details-value snippet-value";
+    val2.textContent = record.maskedSnippets.length ? record.maskedSnippets.join(", ") : "Snippet masking is disabled for the matched field.";
+    row2.appendChild(label2);
+    row2.appendChild(val2);
+    
+    item.appendChild(header);
+    item.appendChild(domain);
+    item.appendChild(time);
+    item.appendChild(row1);
+    item.appendChild(row2);
     return item;
   }
 
@@ -119,19 +150,36 @@
         LOW: "var(--text-badge-low)"
       };
 
-      item.innerHTML = [
-        `<span class="mask-field-name">${rule.fieldName}</span>`,
-        `<span class="mask-field-severity" style="background:${severityBg[rule.severity] || severityBg.LOW};color:${severityColor[rule.severity] || severityColor.LOW}">${rule.severity}</span>`,
-        `<label class="toggle-switch">`,
-        `  <input type="checkbox" ${masking.enabled === true ? "checked" : ""} data-rule-id="${rule.id}">`,
-        `  <span class="toggle-slider"></span>`,
-        `</label>`
-      ].join("");
-
-      const checkbox = item.querySelector("input");
+      const nameSpan = document.createElement("span");
+      nameSpan.className = "mask-field-name";
+      nameSpan.textContent = rule.fieldName;
+      
+      const severitySpan = document.createElement("span");
+      severitySpan.className = "mask-field-severity";
+      severitySpan.style.background = severityBg[rule.severity] || severityBg.LOW;
+      severitySpan.style.color = severityColor[rule.severity] || severityColor.LOW;
+      severitySpan.textContent = rule.severity;
+      
+      const label = document.createElement("label");
+      label.className = "toggle-switch";
+      
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.checked = masking.enabled === true;
+      checkbox.dataset.ruleId = rule.id;
       checkbox.addEventListener("change", async (event) => {
         await toggleRuleMask(rule.id, event.target.checked);
       });
+      
+      const slider = document.createElement("span");
+      slider.className = "toggle-slider";
+      
+      label.appendChild(checkbox);
+      label.appendChild(slider);
+      
+      item.appendChild(nameSpan);
+      item.appendChild(severitySpan);
+      item.appendChild(label);
 
       maskFieldsList.appendChild(item);
     });

@@ -189,18 +189,34 @@
       notify.className = "prompt-guard-notify";
       notify.setAttribute("role", "status");
       notify.setAttribute("aria-live", "polite");
-      notify.innerHTML = [
-        "<span class=\"prompt-guard-notify__icon\">!</span>",
-        "<span class=\"prompt-guard-notify__body\">",
-        "<strong class=\"prompt-guard-notify__title\"></strong>",
-        "<span class=\"prompt-guard-notify__detail\"></span>",
-        "</span>",
-        "<button class=\"prompt-guard-notify__close\" aria-label=\"Dismiss\" type=\"button\">\u00d7</button>"
-      ].join("");
-
-      notify.querySelector(".prompt-guard-notify__close").addEventListener("click", () => {
+      const icon = document.createElement("span");
+      icon.className = "prompt-guard-notify__icon";
+      icon.textContent = "!";
+      
+      const body = document.createElement("span");
+      body.className = "prompt-guard-notify__body";
+      
+      const title = document.createElement("strong");
+      title.className = "prompt-guard-notify__title";
+      
+      const detail = document.createElement("span");
+      detail.className = "prompt-guard-notify__detail";
+      
+      body.appendChild(title);
+      body.appendChild(detail);
+      
+      const closeBtn = document.createElement("button");
+      closeBtn.className = "prompt-guard-notify__close";
+      closeBtn.setAttribute("aria-label", "Dismiss");
+      closeBtn.setAttribute("type", "button");
+      closeBtn.textContent = "\u00d7";
+      closeBtn.addEventListener("click", () => {
         dismissNotify();
       });
+
+      notify.appendChild(icon);
+      notify.appendChild(body);
+      notify.appendChild(closeBtn);
 
       document.body.appendChild(notify);
     }

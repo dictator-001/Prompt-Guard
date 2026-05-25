@@ -74,12 +74,23 @@
     settingsHelper.defaultDomains.forEach((domain) => {
       const item = document.createElement("div");
       item.className = "domain-item";
-      item.innerHTML = [
-        "<div>",
-        `<label><input type="checkbox" ${settings.enabledDomains[domain.id] !== false ? "checked" : ""}> ${domain.label}</label>`,
-        `<small>${domain.matches.join(", ")}</small>`,
-        "</div>"
-      ].join("");
+      const div = document.createElement("div");
+      
+      const label = document.createElement("label");
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.checked = settings.enabledDomains[domain.id] !== false;
+      const labelText = document.createTextNode(` ${domain.label}`);
+      label.appendChild(checkbox);
+      label.appendChild(labelText);
+      
+      const small = document.createElement("small");
+      small.textContent = domain.matches.join(", ");
+      
+      div.appendChild(label);
+      div.appendChild(small);
+      
+      item.appendChild(div);
 
       item.querySelector("input").addEventListener("change", async (event) => {
         settings.enabledDomains[domain.id] = event.target.checked;
@@ -107,13 +118,29 @@
     settings.customDomains.forEach((domain) => {
       const item = document.createElement("div");
       item.className = "domain-item";
-      item.innerHTML = [
-        "<div>",
-        `<label><input type="checkbox" ${domain.enabled !== false ? "checked" : ""}> ${domain.label}</label>`,
-        `<small>${domain.matches.join(", ")}</small>`,
-        "</div>",
-        "<button type=\"button\" class=\"btn-remove\">Remove</button>"
-      ].join("");
+      const div = document.createElement("div");
+      
+      const label = document.createElement("label");
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.checked = domain.enabled !== false;
+      const labelText = document.createTextNode(` ${domain.label}`);
+      label.appendChild(checkbox);
+      label.appendChild(labelText);
+      
+      const small = document.createElement("small");
+      small.textContent = domain.matches.join(", ");
+      
+      div.appendChild(label);
+      div.appendChild(small);
+      
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "btn-remove";
+      btn.textContent = "Remove";
+      
+      item.appendChild(div);
+      item.appendChild(btn);
 
       item.querySelector("input").addEventListener("change", async (event) => {
         domain.enabled = event.target.checked;
@@ -164,39 +191,132 @@
       row.dataset.ruleId = rule.id;
       row.dataset.severity = rule.severity;
       const masking = rule.masking || settingsHelper.defaultMaskingForRule(rule);
-      row.innerHTML = [
-        "<div class=\"rule-header\">",
-        `<label class="rule-toggle"><input class="rule-enabled" type="checkbox" ${rule.enabled !== false ? "checked" : ""}> Detect this field</label>`,
-        "<div class=\"rule-severity-wrap\">",
-        "<label>Severity</label>",
-        "<select class=\"rule-severity\" aria-label=\"Severity\">",
-        ["CRITICAL", "HIGH", "MEDIUM", "LOW"]
-          .map((severity) => `<option value="${severity}" ${rule.severity === severity ? "selected" : ""}>${severity}</option>`)
-          .join(""),
-        "</select>",
-        "</div>",
-        "<button class=\"remove-rule\" type=\"button\">Remove</button>",
-        "</div>",
-        "<div class=\"rule-body\">",
-        "<label class=\"field-label\">Field name",
-        `<input class="rule-name" type="text" value="${escapeAttribute(rule.fieldName)}">`,
-        "</label>",
-        "<label class=\"field-label field-pattern\">Regex pattern",
-        `<textarea class="rule-pattern" spellcheck="false">${escapeHtml(rule.pattern)}</textarea>`,
-        "</label>",
-        "<label class=\"field-label field-risk\">Risk description",
-        `<textarea class="rule-risk">${escapeHtml(rule.risk)}</textarea>`,
-        "</label>",
-        "<section class=\"mask-controls\" aria-label=\"Masking options\">",
-        `<label class="mask-toggle"><input class="mask-enabled" type="checkbox" ${masking.enabled === true ? "checked" : ""}> Mask matched text in prompt</label>`,
-        "<div class=\"mask-grid\">",
-        `<label>Mask character<input class="mask-character" type="text" maxlength="4" value="${escapeAttribute(masking.character || "*")}"></label>`,
-        `<label>Keep start<input class="mask-start" type="number" min="0" max="24" value="${Number.isInteger(masking.preserveStart) ? masking.preserveStart : 0}"></label>`,
-        `<label>Keep end<input class="mask-end" type="number" min="0" max="24" value="${Number.isInteger(masking.preserveEnd) ? masking.preserveEnd : 0}"></label>`,
-        "</div>",
-        "</section>",
-        "</div>"
-      ].join("");
+      const header = document.createElement("div");
+      header.className = "rule-header";
+      
+      const toggleLabel = document.createElement("label");
+      toggleLabel.className = "rule-toggle";
+      const toggleInput = document.createElement("input");
+      toggleInput.className = "rule-enabled";
+      toggleInput.type = "checkbox";
+      toggleInput.checked = rule.enabled !== false;
+      toggleLabel.appendChild(toggleInput);
+      toggleLabel.appendChild(document.createTextNode(" Detect this field"));
+      
+      const sevWrap = document.createElement("div");
+      sevWrap.className = "rule-severity-wrap";
+      const sevLabel = document.createElement("label");
+      sevLabel.textContent = "Severity";
+      const sevSelect = document.createElement("select");
+      sevSelect.className = "rule-severity";
+      sevSelect.setAttribute("aria-label", "Severity");
+      ["CRITICAL", "HIGH", "MEDIUM", "LOW"].forEach(sev => {
+        const opt = document.createElement("option");
+        opt.value = sev;
+        opt.textContent = sev;
+        if (rule.severity === sev) opt.selected = true;
+        sevSelect.appendChild(opt);
+      });
+      sevWrap.appendChild(sevLabel);
+      sevWrap.appendChild(sevSelect);
+      
+      const removeBtn = document.createElement("button");
+      removeBtn.className = "remove-rule";
+      removeBtn.type = "button";
+      removeBtn.textContent = "Remove";
+      
+      header.appendChild(toggleLabel);
+      header.appendChild(sevWrap);
+      header.appendChild(removeBtn);
+      
+      const body = document.createElement("div");
+      body.className = "rule-body";
+      
+      const nameLabel = document.createElement("label");
+      nameLabel.className = "field-label";
+      nameLabel.textContent = "Field name ";
+      const nameInput = document.createElement("input");
+      nameInput.className = "rule-name";
+      nameInput.type = "text";
+      nameInput.value = rule.fieldName || "";
+      nameLabel.appendChild(nameInput);
+      
+      const patternLabel = document.createElement("label");
+      patternLabel.className = "field-label field-pattern";
+      patternLabel.textContent = "Regex pattern ";
+      const patternText = document.createElement("textarea");
+      patternText.className = "rule-pattern";
+      patternText.spellcheck = false;
+      patternText.value = rule.pattern || "";
+      patternLabel.appendChild(patternText);
+      
+      const riskLabel = document.createElement("label");
+      riskLabel.className = "field-label field-risk";
+      riskLabel.textContent = "Risk description ";
+      const riskText = document.createElement("textarea");
+      riskText.className = "rule-risk";
+      riskText.value = rule.risk || "";
+      riskLabel.appendChild(riskText);
+      
+      const maskSection = document.createElement("section");
+      maskSection.className = "mask-controls";
+      maskSection.setAttribute("aria-label", "Masking options");
+      
+      const maskToggleLabel = document.createElement("label");
+      maskToggleLabel.className = "mask-toggle";
+      const maskToggleInput = document.createElement("input");
+      maskToggleInput.className = "mask-enabled";
+      maskToggleInput.type = "checkbox";
+      maskToggleInput.checked = masking.enabled === true;
+      maskToggleLabel.appendChild(maskToggleInput);
+      maskToggleLabel.appendChild(document.createTextNode(" Mask matched text in prompt"));
+      
+      const maskGrid = document.createElement("div");
+      maskGrid.className = "mask-grid";
+      
+      const charLabel = document.createElement("label");
+      charLabel.textContent = "Mask character ";
+      const charInput = document.createElement("input");
+      charInput.className = "mask-character";
+      charInput.type = "text";
+      charInput.maxLength = 4;
+      charInput.value = masking.character || "*";
+      charLabel.appendChild(charInput);
+      
+      const startLabel = document.createElement("label");
+      startLabel.textContent = "Keep start ";
+      const startInput = document.createElement("input");
+      startInput.className = "mask-start";
+      startInput.type = "number";
+      startInput.min = 0;
+      startInput.max = 24;
+      startInput.value = Number.isInteger(masking.preserveStart) ? masking.preserveStart : 0;
+      startLabel.appendChild(startInput);
+      
+      const endLabel = document.createElement("label");
+      endLabel.textContent = "Keep end ";
+      const endInput = document.createElement("input");
+      endInput.className = "mask-end";
+      endInput.type = "number";
+      endInput.min = 0;
+      endInput.max = 24;
+      endInput.value = Number.isInteger(masking.preserveEnd) ? masking.preserveEnd : 0;
+      endLabel.appendChild(endInput);
+      
+      maskGrid.appendChild(charLabel);
+      maskGrid.appendChild(startLabel);
+      maskGrid.appendChild(endLabel);
+      
+      maskSection.appendChild(maskToggleLabel);
+      maskSection.appendChild(maskGrid);
+      
+      body.appendChild(nameLabel);
+      body.appendChild(patternLabel);
+      body.appendChild(riskLabel);
+      body.appendChild(maskSection);
+      
+      row.appendChild(header);
+      row.appendChild(body);
 
       row.querySelector(".remove-rule").addEventListener("click", () => {
         // Collect current edits from all rows before removing this one so we don't lose changes!
