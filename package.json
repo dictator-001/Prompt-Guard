@@ -1,0 +1,15 @@
+{
+  "name": "prompt-guard-browser-extension",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Cross-browser extension that alerts when sensitive data is typed into AI prompt fields.",
+  "scripts": {
+    "build": "node scripts/build.mjs all",
+    "build:chrome": "node scripts/build.mjs chrome",
+    "build:firefox": "node scripts/build.mjs firefox",
+    "test": "node --test tests/scanner.test.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

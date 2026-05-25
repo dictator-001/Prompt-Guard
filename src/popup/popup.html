@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Prompt Guard</title>
+    <link rel="stylesheet" href="popup.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <main class="shell">
+      <header class="header">
+        <div class="brand">
+          <div class="logo-wrap">
+            <img src="../assets/icon128.png" class="logo-icon" alt="Prompt Guard Logo" width="22" height="22">
+
+          </div>
+          <div>
+            <div class="title-row">
+              <h1>Prompt Guard</h1>
+              <span id="statusBadge" class="badge">Idle</span>
+            </div>
+            <p id="statusText" class="subtitle">Checking active tab...</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button id="themeToggle" class="icon-btn" aria-label="Toggle Theme" type="button">
+            <svg class="sun-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+            <svg class="moon-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Current Tab Status</h2>
+        </div>
+        <div id="currentTab" class="empty">No alert detected on this tab.</div>
+      </section>
+
+      <section class="panel mask-panel">
+        <div class="panel-header">
+          <h2>Masking</h2>
+        </div>
+        <div class="mask-toggle-row">
+          <div class="mask-toggle-info">
+            <svg class="mask-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12Z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+            <div>
+              <span class="mask-toggle-label">Mask sensitive data</span>
+              <span class="mask-toggle-desc">Replaces detected values with *** in prompts</span>
+            </div>
+          </div>
+          <label class="toggle-switch" id="maskToggleLabel">
+            <input type="checkbox" id="maskToggle">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div id="maskFieldsList" class="mask-fields-list"></div>
+      </section>
+
+      <footer class="footer">
+        <button id="openOptions" type="button" class="btn-primary">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Configure Settings
+        </button>
+      </footer>
+    </main>
+
+    <script src="../shared/browser-api.js"></script>
+    <script src="../shared/default-rules.js"></script>
+    <script src="../shared/settings.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

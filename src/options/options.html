@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Prompt Guard Options</title>
+    <link rel="stylesheet" href="options.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <main class="shell">
+      <header class="page-head">
+        <div class="brand">
+          <div class="logo-wrap">
+
+            <img src="../assets/icon128.png" class="logo-icon" alt="Prompt Guard Logo" width="26" height="26">
+          </div>
+          <div>
+            <h1>Prompt Guard Options</h1>
+            <p>Detection and alert settings are stored locally in this browser.</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button id="themeToggle" class="icon-btn" aria-label="Toggle Theme" type="button">
+            <svg class="sun-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+            <svg class="moon-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          </button>
+          <span id="saveStatus" class="status">Ready</span>
+        </div>
+      </header>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>AI Sites</h2>
+          <p>Choose default sites and add custom AI domains.</p>
+        </div>
+        <div class="section-card">
+          <div id="defaultDomains" class="domain-list"></div>
+          <form id="customDomainForm" class="domain-form">
+            <input id="customDomainInput" type="text" placeholder="example.com or https://chat.example.com/*">
+            <button type="submit" class="btn-secondary">Add Domain</button>
+          </form>
+          <div id="customDomains" class="domain-list"></div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head row">
+          <div>
+            <h2>Detection Rules</h2>
+            <p>Disable noisy rules or adjust severity and patterns.</p>
+          </div>
+          <div class="actions">
+            <button id="addRule" type="button" class="btn-outline">Add Field</button>
+            <button id="restoreRules" type="button" class="btn-outline">Restore Defaults</button>
+            <button id="saveRules" type="button" class="btn-primary">Save Rules</button>
+          </div>
+        </div>
+
+        <div class="rules-tabs">
+          <button type="button" class="tab-btn active" data-tab="all">All</button>
+          <button type="button" class="tab-btn" data-tab="critical">Critical</button>
+          <button type="button" class="tab-btn" data-tab="high">High</button>
+          <button type="button" class="tab-btn" data-tab="medium">Medium</button>
+          <button type="button" class="tab-btn" data-tab="low">Low</button>
+        </div>
+
+        <div id="rulesTable" class="rules-table"></div>
+      </section>
+    </main>
+
+    <script src="../shared/browser-api.js"></script>
+    <script src="../shared/default-rules.js"></script>
+    <script src="../shared/settings.js"></script>
+    <script src="options.js"></script>
+  </body>
+</html>

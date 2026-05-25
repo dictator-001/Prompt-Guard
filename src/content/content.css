@@ -1,0 +1,121 @@
+/* Prompt Guard — Top-right notification only */
+
+.prompt-guard-notify {
+  box-sizing: border-box;
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: min(400px, calc(100vw - 36px));
+  padding: 14px 16px;
+  border: none;
+  border-left: 4px solid var(--prompt-guard-accent, #c2410c);
+  border-radius: 10px;
+  background: #0f1629;
+  color: #e8eaf0;
+  font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  z-index: 2147483647;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  opacity: 1;
+  transform: translateY(0);
+  animation: prompt-guard-slideIn 0.3s ease;
+}
+
+@keyframes prompt-guard-slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.prompt-guard-notify.fade-out {
+  opacity: 0;
+  transform: translateX(30px);
+  pointer-events: none;
+}
+
+.prompt-guard-notify[data-severity="CRITICAL"] {
+  --prompt-guard-accent: #ef4444;
+}
+
+.prompt-guard-notify[data-severity="HIGH"] {
+  --prompt-guard-accent: #f59e0b;
+}
+
+.prompt-guard-notify[data-severity="MEDIUM"] {
+  --prompt-guard-accent: #d97706;
+}
+
+.prompt-guard-notify[data-severity="LOW"] {
+  --prompt-guard-accent: #60a5fa;
+}
+
+.prompt-guard-notify__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  margin-top: 1px;
+  border-radius: 999px;
+  background: var(--prompt-guard-accent, #c2410c);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.prompt-guard-notify__body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.prompt-guard-notify__title {
+  display: block;
+  margin: 0 0 3px;
+  font-weight: 700;
+  font-size: 13px;
+  color: #f0f1f5;
+}
+
+.prompt-guard-notify__detail {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: #9ca3c0;
+  font-size: 12px;
+}
+
+.prompt-guard-notify__close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.06);
+  border: none;
+  border-radius: 6px;
+  color: #6b7294;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  transition: all 0.15s ease;
+}
+
+.prompt-guard-notify__close:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #e8eaf0;
+}
